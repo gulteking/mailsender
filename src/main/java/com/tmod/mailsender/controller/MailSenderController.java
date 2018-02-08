@@ -1,6 +1,7 @@
 package com.tmod.mailsender.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -30,6 +31,9 @@ public class MailSenderController {
 
     private JavaMailSender emailSender;
 
+    @Value("${spring.mail.username}")
+    private String fromAddress;
+
     @Autowired
     public MailSenderController(JavaMailSender emailSender) {
         this.emailSender = emailSender;
@@ -58,7 +62,6 @@ public class MailSenderController {
         }
         MimeMessage message = emailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
-
         if (ccList != null && !ccList.isEmpty())
             helper.setCc(ccList.toArray(new String[ccList.size()]));
 
@@ -66,6 +69,7 @@ public class MailSenderController {
             helper.setBcc(bccList.toArray(new String[bccList.size()]));
 
 
+        helper.setFrom(fromAddress);
         helper.setTo(to.toArray(new String[to.size()]));
         helper.setSubject(subject);
         helper.setText("<html><body><img src='cid:id101'/><body></html>", true);
