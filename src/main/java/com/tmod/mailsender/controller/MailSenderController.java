@@ -72,7 +72,7 @@ public class MailSenderController {
         helper.setFrom(fromAddress);
         helper.setTo(to.toArray(new String[to.size()]));
         helper.setSubject(subject);
-        helper.setText("<html><body><img src='cid:id101'/><body></html>", true);
+        helper.setText("<html><body><img src='cid:" + multipartFile.getOriginalFilename() + "'/><body></html>", true);
 
 
         Color color = new Color(fontColor.get(0), fontColor.get(1), fontColor.get(2));
@@ -90,7 +90,7 @@ public class MailSenderController {
 
 
         ByteArrayResource imageResource = new ByteArrayResource(imageBytes);
-        helper.addInline("id101", imageResource, "image/png");
+        helper.addInline(multipartFile.getOriginalFilename(), imageResource, "image/png");
 
         emailSender.send(message);
 
